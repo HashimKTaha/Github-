@@ -1,0 +1,466 @@
+<!doctype html>
+<html lang="ar">
+<head>
+<meta charset="utf-8">
+<style>
+@font-face{font-family:Readex;src:url(fonts/ar.woff2) format('woff2');font-weight:160 700;unicode-range:U+0600-06FF,U+0750-077F,U+0870-088E,U+0890-0891,U+0898-08E1,U+08E3-08FF,U+200C-200E,U+2010-2011,U+204F,U+2E41,U+FB50-FDFF,U+FE70-FE74,U+FE76-FEFC}
+@font-face{font-family:Readex;src:url(fonts/la.woff2) format('woff2');font-weight:160 700;unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:Readex;src:url(fonts/lx.woff2) format('woff2');font-weight:160 700;unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
+:root{--paper:#faf6ef;--paper2:#f3ecdf;--ink:#131924;--ink2:#2b3444;--muted:#6a6558;--line:#e6ddcd;--brand:#ff5a1f;--brand2:#d9430c;--brandsoft:#ffe8dc;--teal:#0e7c7b;--tealsoft:#dcf1ee;--sun:#ffc43d;--sunsoft:#fff3cf;--ok:#16794a;--oksoft:#dff3e7;--bad:#b42318}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1080px;height:1920px;overflow:hidden;background:var(--paper);font-family:Readex,sans-serif;color:var(--ink)}
+#stage{position:relative;width:1080px;height:1920px;overflow:hidden}
+.scene{position:absolute;inset:0;opacity:0;will-change:opacity,transform}
+.ar{direction:rtl;font-family:Readex}
+.en{direction:ltr;unicode-bidi:isolate}
+.c{text-align:center}
+.abs{position:absolute}
+.head{position:absolute;left:60px;right:60px;top:300px;text-align:center}
+.h1{font-size:94px;font-weight:700;line-height:1.35;letter-spacing:-0.5px}
+.h2{font-size:42px;font-weight:400;line-height:1.3;margin-top:14px;color:var(--muted)}
+.dark .h2{color:#aab2c2}
+.dark{background:var(--ink);color:#fff}
+.paperbg{background:var(--paper)}
+.pill{display:inline-flex;align-items:center;gap:14px;border-radius:999px;font-weight:600}
+.hl{color:var(--brand)}
+/* phone */
+#phone{position:absolute;left:210px;top:640px;width:660px;height:1000px;border-radius:72px;background:var(--ink);padding:16px;box-shadow:0 40px 90px -30px rgba(19,25,36,.45),0 8px 20px rgba(19,25,36,.12);opacity:0}
+#screen{position:relative;width:100%;height:100%;border-radius:58px;background:#fff;overflow:hidden}
+.notch{position:absolute;top:16px;left:50%;width:170px;height:40px;margin-left:-85px;border-radius:24px;background:var(--ink);z-index:20}
+.sbar{position:absolute;top:18px;left:44px;right:44px;height:36px;font-size:24px;font-weight:600;display:flex;justify-content:space-between;direction:ltr;z-index:19}
+.scr{position:absolute;inset:0;padding:84px 34px 30px;opacity:0;background:#fff}
+.apphead{display:flex;align-items:center;gap:14px;direction:rtl;margin-bottom:22px}
+.apphead .t{font-size:34px;font-weight:700}
+.lbl{font-size:23px;color:var(--muted);margin:16px 4px 8px;direction:rtl;font-weight:500}
+.inp{height:72px;border:2px solid var(--line);border-radius:20px;padding:0 22px;font-size:28px;display:flex;align-items:center;direction:rtl;background:#fffdf9;font-weight:500}
+.inp.f{border-color:var(--brand);box-shadow:0 0 0 5px var(--brandsoft)}
+.caret{display:inline-block;width:3px;height:34px;background:var(--brand);margin:0 2px}
+.chips{display:flex;gap:10px;flex-wrap:wrap;direction:ltr;justify-content:flex-end}
+.chip{padding:12px 22px;border-radius:999px;border:2px solid var(--line);font-size:24px;font-weight:600;color:var(--ink2);background:#fff}
+.chip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.btn{height:86px;border-radius:24px;background:var(--brand);color:#fff;font-size:30px;font-weight:700;display:flex;align-items:center;justify-content:center;direction:rtl;gap:12px}
+.card{border:2px solid var(--line);border-radius:26px;padding:20px;display:flex;gap:18px;direction:rtl;align-items:center;background:#fff;margin-bottom:16px}
+.thumb{width:104px;height:104px;border-radius:20px;flex:none;display:flex;align-items:center;justify-content:center}
+.ct{font-size:27px;font-weight:700}
+.cm{font-size:21px;color:var(--muted);margin-top:4px}
+.price{font-size:24px;font-weight:700;color:var(--teal);background:var(--tealsoft);border-radius:14px;padding:6px 14px;white-space:nowrap}
+.tag{display:inline-block;font-size:19px;font-weight:600;color:var(--brand2);background:var(--brandsoft);border-radius:10px;padding:3px 12px;margin-top:8px}
+.notif{position:absolute;top:70px;left:22px;right:22px;border-radius:30px;background:rgba(30,36,48,.94);color:#fff;padding:20px 24px;display:flex;gap:18px;align-items:center;direction:rtl;z-index:15;box-shadow:0 18px 40px -10px rgba(0,0,0,.4)}
+.step{display:flex;gap:20px;align-items:center;direction:rtl;min-height:76px}
+.dot{width:46px;height:46px;border-radius:50%;border:3px solid var(--line);flex:none;display:flex;align-items:center;justify-content:center;background:#fff}
+.dot.on{background:var(--ok);border-color:var(--ok)}
+.dot.cur{border-color:var(--brand);background:var(--brandsoft)}
+.st{font-size:28px;font-weight:600;color:#b9b2a4}
+.st.on{color:var(--ink)}
+.benefit{display:flex;align-items:center;gap:34px;direction:rtl;background:#fff;border-radius:36px;padding:34px 40px;margin-bottom:28px;box-shadow:0 1px 2px rgb(19 25 36 / .04),0 14px 34px -14px rgb(19 25 36 / .18)}
+.bicon{width:112px;height:112px;border-radius:30px;flex:none;display:flex;align-items:center;justify-content:center}
+.bt{font-size:46px;font-weight:700;line-height:1.3}
+.be{font-size:30px;color:var(--muted);direction:ltr;text-align:right;margin-top:4px}
+.city{position:absolute;padding:20px 36px;border-radius:999px;font-size:44px;font-weight:700;white-space:nowrap;transform-origin:center}
+</style>
+</head>
+<body>
+<div id="stage">
+
+<!-- S1 HOOK -->
+<div class="scene dark" id="s1">
+  <div class="head" style="top:290px">
+    <div class="ar h1" id="s1h">طابعتك <span class="en">3D</span> واقفة؟</div>
+    <div class="en h2" id="s1e">Is your 3D printer just sitting there?</div>
+  </div>
+  <svg id="pr1" class="abs" style="left:190px;top:600px" width="700" height="700" viewBox="0 0 600 600"></svg>
+  <div class="abs c" id="s1z" style="left:0;right:0;top:600px;height:700px;pointer-events:none"></div>
+  <div class="abs" id="s1card" style="left:240px;width:600px;top:1360px;background:#1d2533;border:2px solid #2f394b;border-radius:36px;padding:30px 40px;text-align:center">
+    <div class="ar" style="font-size:32px;color:#aab2c2;font-weight:500">أرباحك هذا الشهر · <span class="en" style="color:#6f7a8e">This month</span></div>
+    <div class="en" id="s1money" style="font-size:120px;font-weight:700;color:var(--brand);line-height:1.15;margin-top:6px">0.00 <span style="font-size:56px">JOD</span></div>
+  </div>
+</div>
+
+<!-- S2 PROBLEM -->
+<div class="scene dark" id="s2">
+  <div class="head" style="top:300px">
+    <div class="ar h1" style="font-size:86px">بتطبع أي إشي…<br><span class="hl">بس وين الزباين؟</span></div>
+    <div class="en h2">You can print anything. Finding customers is the hard part.</div>
+  </div>
+  <div class="abs" style="left:110px;right:110px;top:820px" id="s2list"></div>
+  <div class="abs" id="s2wipe" style="left:540px;top:960px;width:10px;height:10px;border-radius:50%;background:var(--paper);transform:scale(0)"></div>
+</div>
+
+<!-- S3 LOGO -->
+<div class="scene paperbg" id="s3">
+  <svg id="logo3" class="abs" style="left:340px;top:520px" width="400" height="400" viewBox="0 0 64 64">
+    <rect id="lg_bg" width="64" height="64" rx="15" fill="#131924"/>
+    <rect id="lg_1" x="12" y="41" width="40" height="10" rx="5" fill="#ffffff"/>
+    <rect id="lg_2" x="16.5" y="27" width="31" height="10" rx="5" fill="#ffffff" opacity="0.72"/>
+    <rect id="lg_3" x="21" y="13" width="22" height="10" rx="5" fill="#ff5a1f"/>
+    <g id="lg_noz"><rect x="-5" y="-11" width="10" height="7" rx="1.5" fill="#ff5a1f" stroke="#fff" stroke-width="0.8"/><path d="M-2.4 -4 L2.4 -4 L0 -0.5 Z" fill="#fff"/></g>
+  </svg>
+  <div class="abs c en" id="s3word" style="left:0;right:0;top:960px;font-size:150px;font-weight:700;letter-spacing:-3px">Print<span class="hl">Jo</span></div>
+  <div class="abs c" id="s3tag" style="left:60px;right:60px;top:1170px">
+    <div class="ar" style="font-size:56px;font-weight:600">سوق الطباعة ثلاثية الأبعاد بالأردن</div>
+    <div class="en" style="font-size:36px;color:var(--muted);margin-top:8px">Jordan's 3D printing marketplace</div>
+  </div>
+  <div class="abs c" id="s3pill" style="left:0;right:0;top:1370px"><span class="pill ar" style="background:var(--ink);color:#fff;font-size:34px;padding:18px 40px">لأصحاب الطابعات · <span class="en" style="color:#aab2c2;font-weight:400">For printer owners</span></span></div>
+</div>
+
+<!-- STEPS -->
+<div class="scene paperbg" id="steps">
+  <div class="abs c" style="left:0;right:0;top:250px"><span class="pill ar" id="stepbadge" style="background:var(--brand);color:#fff;font-size:30px;padding:12px 30px"></span></div>
+  <div class="head" style="top:335px" id="stephead"></div>
+  <div class="abs" id="stepdots" style="left:0;right:0;top:1680px;display:flex;justify-content:center;gap:16px;direction:rtl"></div>
+</div>
+
+<!-- PHONE (shared by steps) -->
+<div id="phone"><div id="screen">
+  <div class="notch"></div>
+  <div class="sbar"><span>9:41</span><span>●●● ▮</span></div>
+  <div class="notif" id="notif" style="opacity:0">
+    <svg width="60" height="60" viewBox="0 0 64 64"><rect width="64" height="64" rx="15" fill="#131924"/><rect x="12" y="41" width="40" height="10" rx="5" fill="#fff"/><rect x="16.5" y="27" width="31" height="10" rx="5" fill="#fff" opacity=".72"/><rect x="21" y="13" width="22" height="10" rx="5" fill="#ff5a1f"/></svg>
+    <div style="flex:1"><div style="font-size:22px;color:#aab2c2;direction:ltr;text-align:right">PrintJo · now</div><div style="font-size:27px;font-weight:600">طلب جديد بإربد: علبة لمشروع تخرج</div></div>
+  </div>
+
+  <!-- screen 1: join -->
+  <div class="scr" id="sc1">
+    <div class="apphead"><svg width="52" height="52" viewBox="0 0 64 64"><rect width="64" height="64" rx="15" fill="#131924"/><rect x="12" y="41" width="40" height="10" rx="5" fill="#fff"/><rect x="16.5" y="27" width="31" height="10" rx="5" fill="#fff" opacity=".72"/><rect x="21" y="13" width="22" height="10" rx="5" fill="#ff5a1f"/></svg><div class="t">انضم لـ PrintJo كبائع</div></div>
+    <div class="lbl">اسمك</div><div class="inp" id="f1"></div>
+    <div class="lbl">مدينتك</div><div class="inp" id="f2"></div>
+    <div class="lbl">شو الطابعات اللي عندك؟</div><div class="inp" id="f3" style="direction:rtl"></div>
+    <div class="lbl">المواد اللي بتطبع فيها</div>
+    <div class="chips" id="mats"><span class="chip">Resin</span><span class="chip">TPU</span><span class="chip">ABS</span><span class="chip">PETG</span><span class="chip">PLA</span></div>
+    <div class="btn" id="b1" style="margin-top:34px">ابعث طلب الانضمام</div>
+    <div class="abs" id="verified" style="left:34px;right:34px;top:340px;background:#fff;border-radius:36px;padding:44px 30px;text-align:center;box-shadow:0 30px 70px -20px rgba(19,25,36,.4);border:2px solid var(--oksoft)">
+      <div style="width:130px;height:130px;border-radius:50%;background:var(--ok);margin:0 auto;display:flex;align-items:center;justify-content:center"><svg width="70" height="70" viewBox="0 0 24 24"><path id="chkp" d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="22" stroke-dashoffset="22"/></svg></div>
+      <div class="ar" style="font-size:40px;font-weight:700;margin-top:22px">متجرك جاهز!</div>
+      <div class="ar" style="font-size:25px;color:var(--muted);margin-top:8px">بنتأكد من كل متجر قبل ما يستلم طلبات</div>
+      <div class="en" style="font-size:22px;color:#9a9385;margin-top:6px">Every shop is checked before it gets requests</div>
+    </div>
+  </div>
+
+  <!-- screen 2: inbox -->
+  <div class="scr" id="sc2" style="background:#fbf8f3">
+    <div class="apphead"><div class="t">الطلبات</div><span style="flex:1"></span><span class="price" style="background:var(--brandsoft);color:var(--brand2)" id="newcount">3 جديدة</span></div>
+    <div class="ar" style="font-size:23px;color:var(--muted);margin:-10px 4px 18px">زباين بدوّروا على صانع. ابعث عرض سعر وخذ الشغلة.</div>
+    <div class="chips" style="justify-content:flex-start;direction:rtl;margin-bottom:22px"><span class="chip" id="fall">كل المدن</span><span class="chip" id="fcity">مدينتي بس · إربد</span></div>
+    <div id="rq1" class="card"><div class="thumb" style="background:var(--brandsoft)"><svg width="70" height="70" viewBox="0 0 40 40"><path d="M20 4 L35 12 L35 28 L20 36 L5 28 L5 12 Z" fill="#ffd2bf"/><path d="M20 4 L35 12 L20 20 L5 12 Z" fill="#ff5a1f"/><path d="M20 20 L35 12 L35 28 L20 36Z" fill="#d9430c"/></svg></div><div style="flex:1"><div class="ct">علبة لمشروع تخرج</div><div class="cm">ملف STL · إربد · قطعة وحدة</div><span class="tag">مطلوب خلال 3 أيام</span></div><div class="price">15 د.أ</div></div>
+    <div id="rq2" class="card"><div class="thumb" style="background:var(--tealsoft)"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#0e7c7b" stroke-width="2" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="3"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-5-9 8"/></svg></div><div style="flex:1"><div class="ct">يافطة باسم محل</div><div class="cm">صورة + وصف · إربد</div><span class="tag">مطلوب خلال أسبوع</span></div><div class="price">20 د.أ</div></div>
+    <div id="rq3" class="card"><div class="thumb" style="background:var(--sunsoft)"><svg width="64" height="64" viewBox="0 0 24 24"><path d="M7 2h4l1 5-3 2zM17 2h-4l-1 5 3 2z" fill="#0e7c7b"/><circle cx="12" cy="15" r="7" fill="#ffc43d"/><circle cx="12" cy="15" r="4.2" fill="none" stroke="#d99a00" stroke-width="1.5"/></svg></div><div style="flex:1"><div class="ct">50 ميدالية لمدرسة</div><div class="cm">ملف STL · إربد · 50 قطعة</div><span class="tag">مطلوب خلال 10 أيام</span></div><div class="price">60 د.أ</div></div>
+    <div id="tap2" class="abs" style="width:120px;height:120px;border-radius:50%;background:rgba(255,90,31,.25);border:4px solid rgba(255,90,31,.6);opacity:0"></div>
+  </div>
+
+  <!-- screen 3: quote -->
+  <div class="scr" id="sc3">
+    <div class="apphead"><div class="t">ابعث عرض سعر</div></div>
+    <div style="background:var(--paper);border-radius:28px;padding:20px;display:flex;gap:20px;direction:rtl;align-items:center">
+      <div class="thumb" style="background:#fff;width:150px;height:150px;border:2px solid var(--line)"><svg id="cube" width="130" height="130" viewBox="-65 -65 130 130"></svg></div>
+      <div style="flex:1">
+        <div class="ct" style="font-size:29px">علبة لمشروع تخرج</div>
+        <div class="cm en" style="text-align:right">enclosure_v2.stl · 4.8 MB</div>
+        <div id="est" style="margin-top:10px;background:var(--tealsoft);color:var(--teal);border-radius:14px;padding:8px 14px;font-size:20px;font-weight:600;white-space:nowrap">تقدير فوري: 74 غ · 5 س · 9–13 د.أ</div>
+      </div>
+    </div>
+    <div class="lbl" style="margin-top:22px">السعر الإجمالي (د.أ)</div><div class="inp" id="q1" style="font-size:40px;font-weight:700"></div>
+    <div class="lbl">جاهز خلال (أيام)</div><div class="inp" id="q2"></div>
+    <div class="lbl">ملاحظة للزبون</div><div class="inp" id="q3"></div>
+    <div class="btn" id="b3" style="margin-top:30px"><span id="b3t">ابعث عرض سعر</span></div>
+  </div>
+
+  <!-- screen 4: order -->
+  <div class="scr" id="sc4" style="background:#fbf8f3">
+    <div class="apphead"><div class="t">طلب ‎#1042</div><span style="flex:1"></span><span class="price" style="background:var(--oksoft);color:var(--ok)">سارة · إربد</span></div>
+    <div style="background:#fff;border-radius:28px;padding:16px 26px;border:2px solid var(--line)" id="steplist"></div>
+    <div style="display:flex;gap:14px;direction:rtl;margin-top:18px">
+      <div class="chip on" id="pay1" style="flex:1;text-align:center;font-size:23px">كاش عند الاستلام</div>
+      <div class="chip" id="pay2" style="flex:1;text-align:center;font-size:23px">كليك CliQ</div>
+    </div>
+    <div class="abs" id="earn" style="left:34px;right:34px;bottom:30px;background:var(--ink);border-radius:30px;padding:26px 30px;color:#fff;direction:rtl;display:flex;align-items:center;justify-content:space-between">
+      <div><div style="font-size:24px;color:#aab2c2">المدفوع إلك</div><div style="font-size:22px;color:#6f7a8e" class="en">Paid to you</div></div>
+      <div class="en" id="earnv" style="font-size:54px;font-weight:700;color:var(--sun)">+12.00 JOD</div>
+    </div>
+  </div>
+</div></div>
+
+<!-- S5a ZERO -->
+<div class="scene" id="s5a" style="background:var(--brand);color:#fff">
+  <div class="abs c" style="left:0;right:0;top:330px"><span class="pill ar" style="background:rgba(255,255,255,.18);font-size:34px;padding:14px 34px">بفترة الانطلاق · <span class="en" style="font-weight:400;opacity:.85">Early access</span></span></div>
+  <div class="abs c en" id="zero" style="left:0;right:0;top:480px;font-size:470px;font-weight:700;line-height:1;letter-spacing:-12px">0%</div>
+  <div class="abs c" id="zerot" style="left:60px;right:60px;top:1040px">
+    <div class="ar" style="font-size:96px;font-weight:700">عمولة</div>
+    <div class="ar" style="font-size:46px;font-weight:500;margin-top:10px;opacity:.95">كل دينار بتربحه إلك</div>
+    <div class="en" style="font-size:38px;margin-top:14px;opacity:.85">commission. Every dinar you earn is yours.</div>
+  </div>
+</div>
+
+<!-- S5b BENEFITS -->
+<div class="scene paperbg" id="s5b">
+  <div class="head" style="top:300px"><div class="ar h1" style="font-size:88px">ليش تبيع على <span class="en hl">PrintJo</span>؟</div><div class="en h2">Why sell on PrintJo?</div></div>
+  <div class="abs" style="left:80px;right:80px;top:640px" id="blist">
+    <div class="benefit"><div class="bicon" style="background:var(--brandsoft)"><svg width="62" height="62" viewBox="0 0 24 24" fill="none" stroke="#ff5a1f" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3 8-8"/><path d="M20 12v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h9"/></svg></div><div><div class="ar bt">إنت بتختار أي طلب بتاخذ</div><div class="be">Take only the jobs you want</div></div></div>
+    <div class="benefit"><div class="bicon" style="background:var(--tealsoft)"><svg width="62" height="62" viewBox="0 0 24 24" fill="none" stroke="#0e7c7b" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div><div><div class="ar bt">إنت بتحدد سعرك</div><div class="be">Your price, your rules</div></div></div>
+    <div class="benefit"><div class="bicon" style="background:var(--sunsoft)"><svg width="62" height="62" viewBox="0 0 24 24" fill="none" stroke="#c98a00" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div><div><div class="ar bt">شات مباشر مع الزبون</div><div class="be">Chat with buyers in the app</div></div></div>
+    <div class="benefit"><div class="bicon" style="background:var(--oksoft)"><svg width="62" height="62" viewBox="0 0 24 24" fill="#16794a"><path d="M12 2l3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1z"/></svg></div><div><div class="ar bt">تقييمات بتبني اسمك</div><div class="be">Reviews that build your name</div></div></div>
+  </div>
+</div>
+
+<!-- S5c CITIES -->
+<div class="scene" id="s5c" style="background:var(--tealsoft)">
+  <div class="head" style="top:300px"><div class="ar h1" style="font-size:96px">من إربد <span style="color:var(--teal)">للعقبة</span></div><div class="en h2" style="color:#3f6f6c">Requests from all over Jordan</div></div>
+  <div id="cities"></div>
+  <div class="abs c" id="s5cfoot" style="left:60px;right:60px;top:1370px">
+    <div class="ar" style="font-size:52px;font-weight:700">هواة أو محلات طباعة، الكل أهلا وسهلا</div>
+    <div class="en" style="font-size:34px;color:#3f6f6c;margin-top:10px">Hobbyist or print shop. FDM or resin. All welcome.</div>
+  </div>
+</div>
+
+<!-- S6 PROOF -->
+<div class="scene dark" id="s6">
+  <div class="abs c" style="left:0;right:0;top:290px"><span class="pill ar" style="background:#1d2533;border:2px solid #2f394b;color:var(--sun);font-size:32px;padding:14px 34px">إشي عملناه فعلاً · <span class="en" style="color:#aab2c2;font-weight:400">Real order</span></span></div>
+  <div class="abs c en" id="s6num" style="left:0;right:0;top:400px;font-size:250px;font-weight:700;color:var(--sun);line-height:1.1">0</div>
+  <svg id="medals" class="abs" style="left:190px;top:720px" width="700" height="560" viewBox="0 0 700 560"></svg>
+  <div class="abs c" id="s6t" style="left:60px;right:60px;top:1330px">
+    <div class="ar" style="font-size:62px;font-weight:700;line-height:1.4">ميدالية انطبعت وتسلّمت<br>لوزارة الشباب</div>
+    <div class="en" style="font-size:36px;color:#aab2c2;margin-top:12px">medals printed and delivered for the Ministry of Youth</div>
+  </div>
+</div>
+
+<!-- S7 CTA -->
+<div class="scene dark" id="s7">
+  <div class="head" style="top:270px">
+    <div class="ar h1" style="font-size:92px">عندك طابعة <span class="en">3D</span>؟<br><span class="hl">خلّيها تشتغل.</span></div>
+    <div class="en h2">Got a 3D printer? Put it to work.</div>
+  </div>
+  <svg id="pr7" class="abs" style="left:290px;top:700px" width="500" height="500" viewBox="0 0 600 600"></svg>
+  <div class="abs c" id="s7url" style="left:0;right:0;top:1250px"><span class="pill en" style="background:#fff;color:var(--ink);font-size:64px;padding:26px 60px;font-weight:700">printjo.jo<span class="hl">/join</span></span></div>
+  <div class="abs" id="s7btn" style="left:190px;right:190px;top:1420px"><div class="btn" style="height:120px;font-size:44px;border-radius:34px;box-shadow:0 20px 50px -14px rgba(255,90,31,.7)">انضم كبائع · ببلاش</div></div>
+  <div class="abs c en" id="s7sub" style="left:0;right:0;top:1565px;font-size:32px;color:#aab2c2">Join as a seller — it's free</div>
+  <div class="abs c" id="s7logo" style="left:0;right:0;top:1660px;display:flex;justify-content:center;align-items:center;gap:18px">
+    <svg width="64" height="64" viewBox="0 0 64 64"><rect width="64" height="64" rx="15" fill="#2b3444"/><rect x="12" y="41" width="40" height="10" rx="5" fill="#fff"/><rect x="16.5" y="27" width="31" height="10" rx="5" fill="#fff" opacity=".72"/><rect x="21" y="13" width="22" height="10" rx="5" fill="#ff5a1f"/></svg>
+    <span class="en" style="font-size:52px;font-weight:700">Print<span class="hl">Jo</span></span>
+  </div>
+</div>
+
+</div>
+<script>
+const $=id=>document.getElementById(id);
+const clamp=(x,a=0,b=1)=>Math.min(b,Math.max(a,x));
+const P=(t,a,b)=>clamp((t-a)/(b-a));
+const eo=x=>1-Math.pow(1-x,3);
+const eio=x=>x<.5?4*x*x*x:1-Math.pow(-2*x+2,3)/2;
+const back=x=>{const c1=1.70158,c3=c1+1;return 1+c3*Math.pow(x-1,3)+c1*Math.pow(x-1,2)};
+const elastic=x=>x===0?0:x===1?1:Math.pow(2,-10*x)*Math.sin((x*10-.75)*(2*Math.PI)/3)+1;
+const lerp=(a,b,x)=>a+(b-a)*x;
+function vis(t,a,b,fi=.25,fo=.25){if(t<a||t>b)return 0;return Math.min(fi?P(t,a,a+fi):1,fo?1-P(t,b-fo,b):1)}
+function rise(el,t,start,dur=.5,dist=50,extra=''){const k=P(t,start,start+dur);el.style.opacity=eo(k);el.style.transform=`translateY(${(1-eo(k))*dist}px) ${extra}`}
+function pop(el,t,start,dur=.5){const k=P(t,start,start+dur);el.style.opacity=clamp(k*3);el.style.transform=`scale(${k<=0?0.6:lerp(.6,1,back(k))})`}
+function type(str,t,a,b){const n=Math.round(str.length*P(t,a,b));return str.slice(0,n)}
+
+/* ---------- printer drawing ---------- */
+function printer(svg,o){
+  const {headX=0.15,gantry=0.25,layers=0,active=false,time=0,idle=false}=o;
+  const frame=active?'#3d4759':'#343d4d', edge=active?'#56627a':'#454f62';
+  const gy=lerp(150,440,gantry);
+  const hx=lerp(170,430,headX);
+  let s='';
+  // glow
+  if(active) s+=`<ellipse cx="300" cy="470" rx="230" ry="40" fill="#ff5a1f" opacity=".10"/>`;
+  // spool
+  const sa=active?time*120:0;
+  s+=`<g transform="translate(460,40)"><circle r="44" fill="#2b3444" stroke="${edge}" stroke-width="4"/><circle r="30" fill="${active?'#ff5a1f':'#6a7385'}"/><g transform="rotate(${sa})"><rect x="-4" y="-30" width="8" height="60" fill="#2b3444"/><rect x="-30" y="-4" width="60" height="8" fill="#2b3444"/></g><circle r="9" fill="#2b3444" stroke="${edge}" stroke-width="3"/></g>`;
+  // filament line
+  s+=`<path d="M460 70 C 470 120, ${hx+40} ${gy-90}, ${hx} ${gy-40}" fill="none" stroke="${active?'#ff5a1f':'#6a7385'}" stroke-width="4" opacity=".9"/>`;
+  // posts + top
+  s+=`<rect x="70" y="90" width="34" height="440" rx="8" fill="${frame}" stroke="${edge}" stroke-width="3"/>`;
+  s+=`<rect x="496" y="90" width="34" height="440" rx="8" fill="${frame}" stroke="${edge}" stroke-width="3"/>`;
+  s+=`<rect x="60" y="86" width="480" height="34" rx="10" fill="${frame}" stroke="${edge}" stroke-width="3"/>`;
+  // cobweb when idle
+  if(idle){s+=`<g stroke="#8892a6" stroke-width="1.6" fill="none" opacity=".75"><path d="M104 120 L180 120 M104 120 L104 196 M104 120 L160 176 M104 120 L136 188 M104 120 L172 146"/><path d="M128 120 Q120 128 104 144 M152 120 Q138 140 104 168 M176 120 Q156 152 104 192"/></g>`}
+  // bed
+  s+=`<rect x="130" y="472" width="340" height="18" rx="5" fill="${active?'#4b566b':'#3a4354'}"/>`;
+  s+=`<rect x="150" y="490" width="300" height="12" rx="4" fill="#2b3444"/>`;
+  // print object (vase)
+  const L=Math.floor(layers);
+  for(let i=0;i<L;i++){
+    const y=472-(i+1)*11;
+    const w=lerp(150,90,Math.sin(i/22*Math.PI)*0.6+ i/40) ;
+    const c=i%2?'#ff5a1f':'#ff7a45';
+    s+=`<rect x="${300-w/2}" y="${y}" width="${w}" height="11" rx="5" fill="${c}"/>`;
+  }
+  // gantry rail
+  s+=`<rect x="96" y="${gy}" width="408" height="20" rx="6" fill="${edge}"/>`;
+  // head
+  const hc=active?'#ff5a1f':'#6a7385';
+  s+=`<g transform="translate(${hx},${gy-34})"><rect x="-44" y="0" width="88" height="80" rx="14" fill="${hc}"/><circle cx="0" cy="34" r="20" fill="${active?'#d9430c':'#525b6d'}"/><g transform="rotate(${active?time*900:0} 0 34)"><rect x="-3" y="18" width="6" height="32" fill="${active?'#ffb08f':'#7c8598'}"/><rect x="-16" y="31" width="32" height="6" fill="${active?'#ffb08f':'#7c8598'}"/></g><path d="M-14 80 L14 80 L0 100 Z" fill="${active?'#ffd2bf':'#7c8598'}"/>`;
+  if(active) s+=`<circle cx="0" cy="102" r="6" fill="#ffe8dc" opacity="${0.5+0.5*Math.sin(time*40)}"/>`;
+  s+=`</g>`;
+  // base + display
+  s+=`<rect x="50" y="520" width="500" height="56" rx="16" fill="${frame}" stroke="${edge}" stroke-width="3"/>`;
+  s+=`<rect x="380" y="532" width="140" height="32" rx="6" fill="${active?'#0e3b3b':'#1b2230'}"/>`;
+  s+=`<text x="450" y="555" text-anchor="middle" font-family="Readex" font-size="18" font-weight="600" fill="${active?'#5ff0d6':'#6a7385'}">${active?'PRINTING':'IDLE'}</text>`;
+  s+=`<circle cx="90" cy="548" r="8" fill="${active?'#5ff0d6':'#b42318'}"/>`;
+  svg.innerHTML=s;
+}
+
+/* ---------- static builds ---------- */
+const pains=[
+  ['تلاحق الزباين على الإنستغرام','Chasing buyers in DMs'],
+  ['ما بتعرف كيف تسعّر','Guessing what to charge'],
+  ['الطابعة شغّالة يومين بالشهر','A printer that works 2 days a month'],
+];
+$('s2list').innerHTML=pains.map((p,i)=>`<div id="pain${i}" style="display:flex;align-items:center;gap:30px;direction:rtl;background:#1d2533;border:2px solid #2f394b;border-radius:34px;padding:30px 36px;margin-bottom:28px"><div style="width:84px;height:84px;border-radius:50%;background:rgba(180,35,24,.18);flex:none;display:flex;align-items:center;justify-content:center"><svg width="40" height="40" viewBox="0 0 24 24" stroke="#ff6b5a" stroke-width="3.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></div><div><div class="ar" style="font-size:44px;font-weight:600">${p[0]}</div><div class="en" style="font-size:30px;color:#8892a6;text-align:right">${p[1]}</div></div></div>`).join('');
+
+const stepsData=[
+  {a:12,b:17.5,ar:'افتح متجرك ببلاش',en:'Open your seller shop for free'},
+  {a:17.5,b:23,ar:'الطلبات <span class="hl">بتجيك لعندك</span>',en:'Paying requests from your city come to you'},
+  {a:23,b:28.5,ar:'إنت <span class="hl">بتحدد سعرك</span>',en:'You set the price. We show an instant estimate.'},
+  {a:28.5,b:34,ar:'اطبع، سلّم، <span class="hl">واقبض</span>',en:'Print, deliver, get paid. Cash or CliQ.'},
+];
+stepsData.forEach((s,i)=>{const d=document.createElement('div');d.id='sh'+i;d.className='abs';d.style.cssText='left:0;right:0;top:0;opacity:0';d.innerHTML=`<div class="ar h1" style="font-size:88px">${s.ar}</div><div class="en h2">${s.en}</div>`;$('stephead').appendChild(d)});
+$('stepdots').innerHTML=[0,1,2,3].map(i=>`<div id="sd${i}" style="height:14px;border-radius:7px;background:var(--line)"></div>`).join('');
+
+const orderSteps=[['الطلب وصل','Order placed'],['أكّدت الطلب','Confirmed'],['عم ينطبع','Printing'],['جاهز للتسليم','Ready'],['تسلّم','Delivered'],['مكتمل','Completed']];
+$('steplist').innerHTML=orderSteps.map((s,i)=>`<div class="step"><div class="dot" id="od${i}"><svg width="26" height="26" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div style="flex:1"><div class="st" id="os${i}">${s[0]}</div>${i===2?'<div style="height:10px;border-radius:5px;background:var(--line);margin-top:6px;overflow:hidden"><div id="pbar" style="height:100%;width:0;background:var(--brand)"></div></div>':''}</div><div class="en" style="font-size:20px;color:#b9b2a4">${s[1]}</div></div>`).join('');
+
+const cityList=[['إربد',190,690,'#0e7c7b','#fff'],['عجلون',640,640,'#fff','#131924'],['جرش',430,800,'#fff','#131924'],['المفرق',730,790,'#ffc43d','#131924'],['السلط',170,900,'#fff','#131924'],['الزرقاء',640,940,'#ff5a1f','#fff'],['عمّان',360,1010,'#131924','#fff'],['مادبا',200,1120,'#fff','#131924'],['الكرك',560,1110,'#fff','#131924'],['الطفيلة',760,1210,'#fff','#131924'],['معان',300,1230,'#fff','#131924'],['العقبة',540,1250,'#0e7c7b','#fff']];
+$('cities').innerHTML=cityList.map((c,i)=>`<div class="city ar" id="ct${i}" style="left:${c[1]}px;top:${c[2]}px;background:${c[3]};color:${c[4]};box-shadow:0 12px 30px -12px rgba(14,124,123,.45)">${c[0]}</div>`).join('');
+
+// medals grid 10 x 8 = 80? use 20 x 10 = 200, each = 5 medals
+(function(){let s='';for(let r=0;r<10;r++)for(let c=0;c<20;c++){const x=17+c*34.5,y=28+r*52;s+=`<g class="md" transform="translate(${x},${y})" opacity="0"><path d="M-6 -22 L-2 -8 L2 -8 L6 -22" fill="#0e7c7b"/><circle r="13" fill="#ffc43d"/><circle r="7.5" fill="none" stroke="#d99a00" stroke-width="2"/></g>`}$('medals').innerHTML=s})();
+const medalEls=[...document.querySelectorAll('.md')];
+// shuffle order deterministically
+const order=medalEls.map((_,i)=>i).sort((a,b)=>((a*7919)%200)-((b*7919)%200));
+
+function cube(t){
+  const ang=t*1.1, ax=0.5;
+  const v=[];for(const x of[-1,1])for(const y of[-1,1])for(const z of[-1,1])v.push([x,y*0.75,z]);
+  const pr=v.map(([x,y,z])=>{let X=x*Math.cos(ang)-z*Math.sin(ang),Z=x*Math.sin(ang)+z*Math.cos(ang);let Y=y*Math.cos(ax)-Z*Math.sin(ax);Z=y*Math.sin(ax)+Z*Math.cos(ax);const f=34/(1+Z*0.15);return[X*f,Y*f]});
+  const E=[[0,1],[2,3],[4,5],[6,7],[0,2],[1,3],[4,6],[5,7],[0,4],[1,5],[2,6],[3,7]];
+  const faces=[[0,1,3,2],[4,5,7,6],[0,1,5,4],[2,3,7,6],[0,2,6,4],[1,3,7,5]];
+  let s=faces.map(f=>`<polygon points="${f.map(i=>pr[i].join(',')).join(' ')}" fill="#ff5a1f" opacity=".07"/>`).join('');
+  s+=E.map(([a,b])=>`<line x1="${pr[a][0]}" y1="${pr[a][1]}" x2="${pr[b][0]}" y2="${pr[b][1]}" stroke="#ff5a1f" stroke-width="3" stroke-linecap="round"/>`).join('');
+  // hole
+  s+=`<circle cx="0" cy="0" r="3" fill="#d9430c"/>`;
+  $('cube').innerHTML=s;
+}
+
+/* ---------- main render ---------- */
+const END=56;
+function render(t){
+  // S1 hook 0-4
+  let v=vis(t,0,4.1,0.01,0.3); $('s1').style.opacity=v;
+  if(v>0){
+    pop($('s1h'),t,0.1,0.55); rise($('s1e'),t,0.45,0.5,30);
+    printer($('pr1'),{headX:0.08,gantry:0.12,idle:true,time:t});
+    const z=$('s1z'); let zs='';
+    for(let i=0;i<3;i++){const ph=((t*0.7+i/3)%1);zs+=`<div class="en" style="position:absolute;left:${300+ph*70+i*10}px;top:${230-ph*160}px;font-size:${34+ph*30}px;font-weight:700;color:#8892a6;opacity:${Math.sin(ph*Math.PI)*clamp(t*2)}">z</div>`}
+    z.innerHTML=zs;
+    const pr=$('pr1'); const k=P(t,0,0.6); pr.style.opacity=eo(k); pr.style.transform=`translateY(${(1-eo(k))*60}px)`;
+    rise($('s1card'),t,1.4,0.5,60);
+    const sh=t>2.3&&t<2.8?Math.sin((t-2.3)*60)*12*(1-P(t,2.3,2.8)):0;
+    $('s1money').style.transform=`translateX(${sh}px)`;
+  }
+  // S2 4-8
+  v=vis(t,3.9,8.2,0.3,0.01); $('s2').style.opacity=v;
+  if(v>0){
+    const hd=$('s2').querySelector('.head'); rise(hd,t,4.0,0.5,40);
+    for(let i=0;i<3;i++){const el=$('pain'+i);const st=4.7+i*0.55;const k=P(t,st,st+0.45);el.style.opacity=eo(k);el.style.transform=`translateX(${(1-eo(k))*-120}px)`;}
+    const w=P(t,7.35,8.05); $('s2wipe').style.transform=`scale(${eio(w)*260})`;
+  }
+  // S3 logo 8-12
+  v=vis(t,7.95,12.1,0.05,0.35); $('s3').style.opacity=v;
+  if(v>0){
+    const lg=$('logo3'); const k=P(t,8.0,8.45); lg.style.transform=`scale(${lerp(.3,1,back(k))}) translateY(${-P(t,11.6,12.1)*40}px)`; lg.style.opacity=clamp(k*4);
+    // layers printed by nozzle
+    const L=[[8.45,9.0,12,40,46],[9.0,9.5,16.5,31,32],[9.5,9.95,21,22,18]];
+    let nx=32,ny=-20;
+    L.forEach(([a,b,x,w,y],i)=>{const r=$('lg_'+(i+1));const k2=P(t,a,b);r.setAttribute('width',Math.max(0.01,w*k2));r.setAttribute('x',x);r.style.opacity=k2>0?1:0;if(t>=a&&t<b){nx=x+w*k2;ny=y-5;}});
+    if(t<8.45){nx=lerp(70,12,P(t,8.1,8.45));ny=41}
+    if(t>=9.95){const e=P(t,9.95,10.3);nx=lerp(43,80,e);ny=lerp(13,-10,e)}
+    $('lg_noz').setAttribute('transform',`translate(${nx},${ny+5})`);
+    $('lg_noz').style.opacity=(t>8.1&&t<10.3)?1:0;
+    if(t>9.95){const b=P(t,9.95,10.35);lg.style.transform=`scale(${1+Math.sin(b*Math.PI)*0.08}) translateY(${-P(t,11.6,12.1)*40}px)`}
+    pop($('s3word'),t,10.1,0.55); rise($('s3tag'),t,10.45,0.5,30); rise($('s3pill'),t,10.85,0.5,30);
+  }
+  // STEPS 12-34
+  v=vis(t,11.8,34.2,0.3,0.3); $('steps').style.opacity=v;
+  const ph=$('phone');
+  if(t>11.9&&t<34.4){
+    const kin=P(t,12.0,12.7), kout=P(t,33.7,34.3);
+    ph.style.opacity=clamp(kin*3)*(1-kout);
+    ph.style.transform=`translateY(${(1-eo(kin))*900+eio(kout)*900}px) rotate(${(1-eo(kin))*6}deg)`;
+  } else ph.style.opacity=0;
+  if(v>0){
+    let cur=stepsData.findIndex(s=>t>=s.a&&t<s.b); if(cur<0)cur=t<12?0:3;
+    $('stepbadge').innerHTML=`الخطوة ${['١','٢','٣','٤'][cur]} من ٤ · <span class="en" style="font-weight:400;opacity:.85">Step ${cur+1} of 4</span>`;
+    stepsData.forEach((s,i)=>{const el=$('sh'+i);const a=i===0?12.2:s.a+0.05;const vv=vis(t,a,s.b,0.35,0.25);el.style.opacity=vv;el.style.transform=`translateY(${(1-eo(P(t,a,a+0.45)))*40}px)`});
+    for(let i=0;i<4;i++){const d=$('sd'+i);d.style.width=(i===cur?80:14)+'px';d.style.background=i<=cur?'var(--brand)':'var(--line)'}
+    // screens
+    for(let i=0;i<4;i++){const s=stepsData[i];const el=$('sc'+(i+1));const vv=vis(t,s.a-(i?0.05:1),s.b+(i<3?0.05:1),i?0.3:0.01,i<3?0.3:0.01);el.style.opacity=vv;el.style.transform=`translateX(${(1-eo(P(t,s.a-0.05,s.a+0.4)))*(i?-80:0)}px)`}
+    // screen 1
+    const caret='<span class="caret"></span>';
+    const blink=(Math.floor(t*3)%2)?caret:'';
+    const f1='رامي',f2='إربد',f3='Bambu Lab P1S، Ender 3 V3';
+    $('f1').className='inp'+(t>12.7&&t<13.4?' f':''); $('f1').innerHTML=type(f1,t,12.8,13.2)+(t>12.7&&t<13.4?caret:'');
+    $('f2').className='inp'+(t>13.4&&t<13.95?' f':''); $('f2').innerHTML=type(f2,t,13.5,13.85)+(t>13.4&&t<13.95?caret:'');
+    $('f3').className='inp'+(t>13.95&&t<15.0?' f':''); $('f3').innerHTML='<span dir="ltr" style="unicode-bidi:isolate;font-size:26px">'+type(f3,t,14.0,14.9)+'</span>'+(t>13.95&&t<15.0?caret:'');
+    const mats=[...$('mats').children]; // order displayed: Resin TPU ABS PETG PLA
+    [[4,15.05],[3,15.25],[1,15.45]].forEach(([i,ti])=>{mats[i].className='chip'+(t>ti?' on':'');mats[i].style.transform=`scale(${t>ti&&t<ti+0.2?1.12:1})`});
+    const bp=t>15.75&&t<15.95; $('b1').style.transform=`scale(${bp?0.95:1})`; $('b1').style.background=bp?'var(--brand2)':'var(--brand)';
+    const kv=P(t,16.0,16.45); $('verified').style.opacity=clamp(kv*3); $('verified').style.transform=`scale(${t<16?0.7:lerp(.7,1,back(kv))})`;
+    $('chkp').setAttribute('stroke-dashoffset',22*(1-eo(P(t,16.25,16.7))));
+    // screen 2
+    const nk=P(t,18.5,18.85), nout=P(t,20.6,20.95);
+    $('notif').style.opacity=t>18.5&&t<21?(1-nout):0; $('notif').style.transform=`translateY(${(1-back(nk))*-160 - eio(nout)*160}px)`;
+    const fc=t>18.0; $('fcity').className='chip'+(fc?' on':''); $('fall').className='chip'+(fc?'':' on');
+    $('fcity').style.transform=`scale(${t>18&&t<18.2?1.1:1})`;
+    [['rq1',18.75],['rq2',19.45],['rq3',20.1]].forEach(([id,ti])=>{const el=$(id);const k=P(t,ti,ti+0.45);el.style.opacity=eo(k);el.style.transform=`translateY(${(1-back(k))*-60}px) scale(${lerp(.92,1,eo(k))})`});
+    const hi=t>21.7; $('rq1').style.borderColor=hi?'var(--brand)':'var(--line)'; $('rq1').style.boxShadow=hi?'0 0 0 6px var(--brandsoft)':'none';
+    $('newcount').textContent=(t<18.75?'0':t<19.45?'1':t<20.1?'2':'3')+' جديدة';
+    const tp=P(t,21.6,22.1); const tap=$('tap2'); tap.style.opacity=t>21.6&&t<22.1?(1-tp):0; tap.style.left='440px'; tap.style.top='330px'; tap.style.transform=`scale(${0.4+tp})`;
+    // screen 3
+    cube(t);
+    $('est').style.opacity=eo(P(t,23.6,24.0));
+    const pv=lerp(0,12,eo(P(t,24.25,25.0)));
+    const qf=t>24.1&&t<25.15; $('q1').className='inp'+(qf?' f':''); $('q1').innerHTML=(t>24.2?`<span class="en">${pv.toFixed(2)}</span>`:'')+(qf?caret:'');
+    const q2f=t>25.15&&t<25.45; $('q2').className='inp'+(q2f?' f':''); $('q2').innerHTML=(t>25.25?'<span class="en">2</span>&nbsp;أيام':'')+(q2f?caret:'');
+    const q3s='PETG أسود، شامل التوصيل'; const q3f=t>25.45&&t<26.6; $('q3').className='inp'+(q3f?' f':''); $('q3').innerHTML=type(q3s,t,25.5,26.45)+(q3f?caret:'');
+    const b3p=t>26.75&&t<26.95, sent=t>26.95; $('b3').style.transform=`scale(${b3p?0.95:sent&&t<27.3?1.04:1})`; $('b3').style.background=sent?'var(--ok)':(b3p?'var(--brand2)':'var(--brand)');
+    $('b3t').textContent=sent?'انبعث العرض ✓':'ابعث عرض سعر';
+    // screen 4
+    const times=[28.75,29.25,29.75,30.9,31.4,31.9];
+    times.forEach((ti,i)=>{const on=t>ti;const nxt=i+1<times.length?t>times[i+1]:false;const el=$('od'+i);el.className='dot'+(on?' on':'');el.style.transform=`scale(${on&&t<ti+0.2?1.25:1})`;$('os'+i).className='st'+(on?' on':'');});
+    $('pbar').style.width=(P(t,29.75,30.85)*100)+'%';
+    const cliq=t>31.9; $('pay1').className='chip'+(cliq?'':' on'); $('pay2').className='chip'+(cliq?' on':'');
+    const ek=P(t,32.0,32.45); $('earn').style.opacity=eo(ek); $('earn').style.transform=`translateY(${(1-back(ek))*120}px)`;
+    $('earnv').textContent='+'+lerp(0,12,eo(P(t,32.2,32.9))).toFixed(2)+' JOD';
+    $('earnv').style.transform=`scale(${t>32.9&&t<33.2?1.08:1})`;
+  }
+  // S5a 34-37.5
+  v=vis(t,34.0,37.6,0.12,0.25); $('s5a').style.opacity=v;
+  if(v>0){const k=P(t,34.05,34.6);$('zero').style.transform=`scale(${lerp(2.4,1,eo(k))})`;$('zero').style.opacity=clamp(k*2.5);rise($('zerot'),t,34.55,0.5,50);}
+  // S5b 37.5-41.6
+  v=vis(t,37.45,41.7,0.25,0.25); $('s5b').style.opacity=v;
+  if(v>0){rise($('s5b').querySelector('.head'),t,37.5,0.45,30);[...$('blist').children].forEach((el,i)=>{const st=37.85+i*0.55;const k=P(t,st,st+0.45);el.style.opacity=eo(k);el.style.transform=`translateX(${(1-eo(k))*140}px)`})}
+  // S5c 41.6-45.1
+  v=vis(t,41.55,45.2,0.25,0.25); $('s5c').style.opacity=v;
+  if(v>0){rise($('s5c').querySelector('.head'),t,41.6,0.45,30);cityList.forEach((c,i)=>{const st=41.9+i*0.12;const k=P(t,st,st+0.45);const el=$('ct'+i);el.style.opacity=clamp(k*3);el.style.transform=`scale(${k<=0?0:lerp(0,1,back(k))}) translateY(${Math.sin(t*2+i)*6}px)`});rise($('s5cfoot'),t,43.4,0.5,30)}
+  // S6 45.1-49.1
+  v=vis(t,45.05,49.2,0.25,0.25); $('s6').style.opacity=v;
+  if(v>0){const k=eio(P(t,45.4,47.4));$('s6num').textContent=Math.round(k*1000).toLocaleString('en-US');$('s6num').style.transform=`scale(${t>47.4&&t<47.7?1+Math.sin(P(t,47.4,47.7)*Math.PI)*0.08:1})`;const n=Math.round(k*200);order.forEach((idx,j)=>{medalEls[idx].setAttribute('opacity',j<n?1:0.08)});rise($('s6t'),t,46.0,0.5,40)}
+  // S7 49.1-56
+  v=vis(t,49.05,END,0.3,0.01); $('s7').style.opacity=v;
+  if(v>0){
+    rise($('s7').querySelector('.head'),t,49.15,0.5,40);
+    const pt=t-49.1;
+    const zig=(pt*1.6)%2; const hx=zig<1?zig:2-zig;
+    const layers=Math.min(34,pt*6.2);
+    printer($('pr7'),{active:true,time:t,headX:lerp(0.25,0.75,hx),gantry:clamp(0.96-(layers*11+60)/290),layers});
+    const pr=$('pr7');const k=P(t,49.2,49.8);pr.style.opacity=eo(k);pr.style.transform=`scale(${lerp(.85,1,eo(k))})`;
+    pop($('s7url'),t,50.3,0.55);
+    const bk=P(t,50.8,51.3);$('s7btn').style.opacity=eo(bk);$('s7btn').style.transform=`translateY(${(1-eo(bk))*40}px) scale(${1+ (t>52.6&&t<53.0?-0.05*Math.sin(P(t,52.6,53.0)*Math.PI):0) + (t>51.3?0.015*Math.sin((t-51.3)*6):0)})`;
+    rise($('s7sub'),t,51.1,0.5,20); rise($('s7logo'),t,51.5,0.5,20);
+  }
+}
+window.render=render; window.END=END;
+render(0);
+</script>
+</body>
+</html>
